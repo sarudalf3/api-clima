@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>::Weather::</title>
+
+    <!--ESTILOS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <style>
+        .backfig{
+        background-image: url("https://openweather.co.uk/storage/app/media/we-are-pleased-announce-our-new-statistical-weather-data-api-now-available.png");
+        background-size: cover;
+        opacity: 0.8;
+        }
+    </style>
+    <!-- SCRIPTS -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#form div button").on("click", function () {
+
+                $("#ans .row").empty();
+                $("#ans").empty();
+
+                let loc01 = $("#city").val();
+                let loc02 = $("#country").val();
+                let url = `http://api.openweathermap.org/data/2.5/weather?q=${loc01},${loc02}&APPID=eae691de36ef6be2f8b843090ecf2951&units=metric`;
+
+                $.ajax({
+                    type:'GET',
+                    url:url,
+                    dataType:'json',
+                    success:do_something,
+                    error:do_something_else
+                    });
+                    
+                    function do_something(ans) {
+                        let urlIcon = ans.weather[0].icon;
+                        let iconWeather = `http://openweathermap.org/img/wn/${urlIcon}@2x.png`;
+
+                        results = `
+                            <h4>Weather in ${loc01}, ${loc02}</h4>
+                            <hr>
+                        `
+                        $("#ans").append(results);
+
+                        let imagenHtml = `
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <img src="${iconWeather}" class="card-img-center" style="background-color:#D7EAD5" alt="icon_Weather" height="100">
+                                    </div>
+                                    <div class="col-9">    
+                                        <p> <b>Weather: </b> ${ans.weather[0].description} </p>
+                                        <p> <b>Temperature : </b> ${ans.main.temp} °C </p>
+                                        <p> <b>Coordinates: </b> ${ans.coord.lon}, ${ans.coord.lat} </p>
+                                    </div>
+                                </div>
+                            </div>
+                            `;
+                        $(".row #ans").append(imagenHtml);
+                        console.log(imagenHtml);
+                    }
+                    
+                    function do_something_else() {
+                        results = `
+                            <h4>City not found!!</h4>
+                            <hr>
+                        `
+                        $("#ans").append(results);
+                    } 
+        });
+    });                
+    </script>
+
+</head>
+
+<body>
+    <div class="container-fluid my-1 py-4 backfig">
+        <h1 style="text-align:center; color:lime; opacity:1">Do you need to the weather in your city?</h1>
+        <h3 style="text-align:center; color:lime; opacity:1">It's free, do you try?</h3>
+    </div>
+    <div class="container mt-5">
+        <div class="row">
+            <div id="form" class="col-sm-12 col-md-6 col-lg-6">
+                <h4>Enter data</h4>
+                <hr>
+                <div class="mb-3 row">
+                    <label for="city" class="col-sm-3 col-form-label mb-1">City: </label>
+                    <div class="col-sm-9 mb-1">
+                        <input type="text" class="form-control" id="city">
+                    </div>
+                    
+                    <label for="country" class="col-sm-3 col-form-label mt-1">Country: </label>
+                    <div class="col-sm-9 mt-1">
+                        <input type="text" class="form-control" id="country">
+                    </div>
+                </div>
+                <div class="d-grid gap-2 mb-3">
+                    <button class="btn btn-primary" type="button">SEARCH CITY</button>
+                </div>
+            </div>
+            <div id="ans" class="col-sm-12 col-md-6 col-lg-6">
+                <div class="row mb-3">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+crossorigin="anonymous"></script>
+</body>
+
+</html>
